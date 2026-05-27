@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: planificapp
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn nombre_proyecto.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: proyecto.settings
