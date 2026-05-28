@@ -65,12 +65,38 @@ class RegisterAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = UsuarioExternoSerializer(data=request.data)
-        if serializer.is_valid():
-            usuario = serializer.save()
-            data = UsuarioExternoSerializer(usuario).data
-            return Response(data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            print("DATA RECIBIDA:")
+            print(request.data)
+
+            serializer = UsuarioExternoSerializer(data=request.data)
+
+            if serializer.is_valid():
+                usuario = serializer.save()
+
+                print("USUARIO CREADO")
+
+                data = UsuarioExternoSerializer(usuario).data
+
+                return Response(data, status=status.HTTP_201_CREATED)
+
+            print("ERRORES SERIALIZER:")
+            print(serializer.errors)
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            import traceback
+
+            print("ERROR TOTAL:")
+            print(str(e))
+
+            traceback.print_exc()
+
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class LoginAPIView(APIView):
